@@ -7,3 +7,5 @@ Thumbs.db
 *.pkl
 *.joblib
 .collector_session.json
+core/team_roster.py
+my_profile.json
