@@ -1,4 +1,3 @@
-import sys
 from pathlib import Path
 import joblib
 import pandas as pd
@@ -7,22 +6,26 @@ from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
-DATA_PATH = ROOT_DIR / "data" / "raw" / "landmarks.csv"
+RAW_DATA_DIR = ROOT_DIR / "data" / "raw"
 MODEL_OUT_PATH = ROOT_DIR / "models" / "msl_classifier.joblib"
 
 
 def main():
-    if not DATA_PATH.exists():
-        raise FileNotFoundError(f"Dataset not found at {DATA_PATH}. Run 01_collect_data.py first.")
+    csv_files = sorted(RAW_DATA_DIR.glob("landmarks*.csv"))
+    if not csv_files:
+        raise FileNotFoundError(f"No CSV files found in {RAW_DATA_DIR}. Run 01_collect_data.py first.")
 
-    df = pd.read_csv(DATA_PATH)
-    print(f"Loaded {len(df)} total samples:")
+    df_list = [pd.read_csv(f) for f in csv_files]
+    df = pd.concat(df_list, ignore_index=True)
+
+    print(f"Merged {len(csv_files)} file(s) -> {len(df)} total samples:")
     print(df["label"].value_counts(), "\n")
 
-    X = df.drop(columns=["label"]).values
+   # Drop metadata columns if present so X contains only the 63 landmark features
+    feature_cols = [c for c in df.columns if c not in ("label", "member_key", "collector", "timestamp")]
+    X = df[feature_cols].values
     y = df["label"].values
 
-    # Stratified 80/20 split keeps class proportions equal in train and test sets
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42, stratify=y
     )
