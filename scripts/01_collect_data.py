@@ -1,4 +1,5 @@
 import csv
+import hashlib
 import json
 import sys
 from datetime import datetime
@@ -10,7 +11,15 @@ sys.path.append(str(ROOT_DIR))
 
 from core.detector import HandDetector
 from core.preprocessing import normalize_landmarks
-from core.team_roster import TEAM_MEMBERS
+
+# SHA-256 hashes of member keys (safe to push to GitHub; impossible to reverse)
+MEMBER_HASHES = {
+    "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92": {
+        "name": "Min Khant Nyar",
+        "slug": "min_khant_nyar",
+    },
+    # Paste teammate SHA-256 hashes below as you assign them keys
+}
 
 DATA_DIR = ROOT_DIR / "data" / "raw"
 SESSION_FILE = ROOT_DIR / ".collector_session.json"
@@ -26,30 +35,44 @@ HEADER = ["member_key", "collector", "timestamp", "label"] + [
 ]
 
 
+def hash_key(raw_key: str) -> str:
+    return hashlib.sha256(raw_key.strip().lower().encode("utf-8")).hexdigest()
+
+
 def authenticate_member() -> tuple[str, dict]:
-    """Load saved member session if available; otherwise prompt once for access key."""
+    """Verify member using SHA-256 hash so plain-text keys never appear in GitHub."""
+    # 1. Check if leader's private team_roster.py exists locally
+    try:
+        from core.team_roster import TEAM_MEMBERS
+        roster_by_hash = {hash_key(k): v for k, v in TEAM_MEMBERS.items()}
+    except ImportError:
+        roster_by_hash = MEMBER_HASHES
+
+    # 2. Check saved local login session
     if SESSION_FILE.exists():
         try:
             saved = json.loads(SESSION_FILE.read_text(encoding="utf-8"))
-            key = saved.get("member_key", "").lower()
-            if key in TEAM_MEMBERS:
-                member = TEAM_MEMBERS[key]
-                print(f"Welcome back, {member['name']} ({key})!")
-                return key, member
+            saved_hash = saved.get("key_hash", "")
+            if saved_hash in roster_by_hash:
+                member = roster_by_hash[saved_hash]
+                print(f"Welcome back, {member['name']}!")
+                return saved_hash[:8], member
         except (json.JSONDecodeError, OSError):
             pass
 
+    # 3. First-time login prompt
     while True:
-        entered_key = input("Enter your unique Team Access Key (e.g., smm123): ").strip().lower()
-        if entered_key in TEAM_MEMBERS:
-            member = TEAM_MEMBERS[entered_key]
+        entered_key = input("Enter your unique Team Access Key: ").strip().lower()
+        entered_hash = hash_key(entered_key)
+        if entered_hash in roster_by_hash:
+            member = roster_by_hash[entered_hash]
             SESSION_FILE.write_text(
-                json.dumps({"member_key": entered_key}, indent=2),
+                json.dumps({"key_hash": entered_hash}, indent=2),
                 encoding="utf-8",
             )
             print(f"Verified! Logged in as {member['name']} (saved for future sessions).")
-            return entered_key, member
-        print("Invalid access key. Please check your key with the team leader and try again.")
+            return entered_hash[:8], member
+        print("Invalid access key. Contact the team leader.")
 
 
 def load_existing_rows(csv_path: Path) -> list[list]:
