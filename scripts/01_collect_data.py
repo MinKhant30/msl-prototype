@@ -18,6 +18,10 @@ MEMBER_HASHES = {
         "name": "Min Khant Nyar",
         "slug": "min_khant_nyar",
     },
+    "de7cebecdbfbaedd1a99ed28bd4e85f328ef7991f30faa84305b57cdfe2161d9": {
+        "name": "Soe Myat Min",
+        "slug": "soe_myat_min",
+    },
     # Paste teammate SHA-256 hashes below as you assign them keys
 }
 
