@@ -10,3 +10,4 @@ Thumbs.db
 core/team_roster.py
 my_profile.json
 scripts/sync_hashes.py
+models/msl_classifier.joblib
