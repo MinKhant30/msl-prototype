@@ -5,7 +5,8 @@ import joblib
 import numpy as np
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from app.schemas import LandmarkRequest, PredictionResponse
 from core.detector import HandDetector
 from core.preprocessing import normalize_landmarks
@@ -38,6 +39,16 @@ app = FastAPI(
     version="0.1.0",
     lifespan=lifespan,
 )
+BASE_DIR = Path(__file__).resolve().parent.parent
+STATIC_DIR = BASE_DIR / "static"
+STATIC_DIR.mkdir(exist_ok=True)
+
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
+
+@app.get("/", include_in_schema=False)
+def serve_frontend():
+    return FileResponse(STATIC_DIR / "index.html")
 
 app.add_middleware(
     CORSMiddleware,
