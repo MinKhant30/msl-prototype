@@ -13,8 +13,9 @@ from core.detector import HandDetector
 from core.preprocessing import normalize_landmarks
 
 # SHA-256 hashes of member keys (safe to push to GitHub; impossible to reverse)
+
 MEMBER_HASHES = {
-    "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92": {
+    "f3eea7d9060c63dd7343d5d8bf426d31727006a78163849b24572e03c8b552ea": {
         "name": "Min Khant Nyar",
         "slug": "min_khant_nyar",
     },
@@ -22,7 +23,46 @@ MEMBER_HASHES = {
         "name": "Soe Myat Min",
         "slug": "soe_myat_min",
     },
-    # Paste teammate SHA-256 hashes below as you assign them keys
+    "18f78be3dbc3c59d153218cf673b709945d784c822441e22dd2f200605a211bb": {
+        "name": "Myat Phone Myint",
+        "slug": "myat_phone_myint",
+    },
+    "8a8f9a43ca38ef12c95e5dc2e6e386ef5bb47654330b5e0f7c62ff6425b03a5b": {
+        "name": "Aung Phyo Thu",
+        "slug": "aung_phyo_thu",
+    },
+    "a27bb45e608bdbff2f7a7b1ef671e3bf1aba0660b4eabb6dd22c3b75df41c80b": {
+        "name": "Aung Thein Khaing",
+        "slug": "aung_thein_khaing",
+    },
+    "9a55062f91f055e7478cee3934c1b35c4ab022c5dca4a2c91447d98dd39bf9df": {
+        "name": "Min Khant Kyaw Win",
+        "slug": "min_khant_kyaw_win",
+    },
+    "0d029c08d3e68f82341ee395d4af63b8b4073a35cf66f550a21df0c0624c45a2": {
+        "name": "Moe Kyaw Htike",
+        "slug": "moe_kyaw_htike",
+    },
+    "8b341219ecbde7947091a1b60c16cef494fe4270c4ff7a7af2c2e14b9a3f655a": {
+        "name": "Thurein Theikdi Soe",
+        "slug": "thurein_theikdi_soe",
+    },
+    "5a55b5e954a7821d358b9233e6f6388e55370d798781e5a28ea5d9dcec8a239e": {
+        "name": "Khin Hla",
+        "slug": "khin_hla",
+    },
+    "e88ddc776322b34b986bd5a06e3a9d59d7cc700e586f8d1ce7463a5b46aa89ce": {
+        "name": "Yoon Me Me",
+        "slug": "yoon_me_me",
+    },
+    "c82bdd4b0d456469690182efa69a949e38c85950fe9b693f996dbf08e7a98b06": {
+        "name": "Khaing Thazin Nyein",
+        "slug": "khaing_thazin_nyein",
+    },
+    "e43420fb85465bd13d3bd961dd97a020ff51371d384b2623fcc833d34a0bb397": {
+        "name": "Hsu Myat Nandar",
+        "slug": "hsu_myat_nandar",
+    },
 }
 
 DATA_DIR = ROOT_DIR / "data" / "raw"

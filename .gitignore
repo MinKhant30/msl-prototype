@@ -9,3 +9,4 @@ Thumbs.db
 .collector_session.json
 core/team_roster.py
 my_profile.json
+scripts/sync_hashes.py
